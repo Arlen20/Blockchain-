@@ -209,12 +209,12 @@ contract MyContract {
    ```javascript
    const { Web3 } = require('web3')
 
-// Initialize Web3 instance with Remix's provider
-const web3 = new Web3(window.ethereum) // This works with MetaMask
-
-const deployedAddress = 'your_contract_address_here' // Replace with your contract address from Remix
-	const abi = [
-		/* ABI from Remix (copy and paste) */
+	// Initialize Web3 instance with Remix's provider
+	const web3 = new Web3(window.ethereum) // This works with MetaMask
+	
+	const deployedAddress = 'your_contract_address_here' // Replace with your contract address from Remix
+		const abi = [
+			/* ABI from Remix (copy and paste) */
 	]
 	
 	const myContract = new web3.eth.Contract(abi, deployedAddress)
