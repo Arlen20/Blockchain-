@@ -339,7 +339,8 @@ Next, create a new file called index.js in your project directory and add the fo
    ```bash
    node interact.js
    ```
-![Screenshot 2024-12-29 183235](https://github.com/user-attachments/assets/4aba8ec4-eaaa-4f02-aede-5734a3117d9a)
+   
+![Screenshot 2024-12-29 210941](https://github.com/user-attachments/assets/4777435f-a5fd-4cfc-8611-49cca2484292)
 
 Step-by-Step Breakdown
 Setup Web3 Instance:
