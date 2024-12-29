@@ -84,6 +84,7 @@ contract MyContract {
    ```bash
    npm install solc@^0.8.0
    ```
+
 2. Create a file named `compile.js` and add the following code:
    ```javascript
 	const solc = require('solc')
