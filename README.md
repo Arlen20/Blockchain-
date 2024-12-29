@@ -296,90 +296,43 @@ Next, create a new file called index.js in your project directory and add the fo
 ### Step 6: Interact with the Contract
 1. Create an `interact.js` file:
    ```javascript
-   const { Web3 } = require('web3')
-
-	// Initialize Web3 instance with Remix's provider
-	const web3 = new Web3(window.ethereum) // This works with MetaMask
+   	const { Web3 } = require('web3')
+	const path = require('path')
+	const fs = require('fs')
 	
-	const deployedAddress = 'your_contract_address_here' // Replace with your contract address from Remix
-		const abi = [
-			/* ABI from Remix (copy and paste) */
-	]
+	const web3 = new Web3('http://127.0.0.1:8545/')
 	
+	const deployedAddress = fs.readFileSync('./MyContractAddress.txt', 'utf8')
+	const abi = require('./MyContractAbi.json')
 	const myContract = new web3.eth.Contract(abi, deployedAddress)
 	
 	async function interact() {
-		// Request account access if needed (MetaMask)
-		await window.ethereum.request({ method: 'eth_requestAccounts' })
-	
-		const accounts = await web3.eth.getAccounts()
-		const user = accounts[0]
-	
-		console.log('Interacting with contract at address:', deployedAddress)
-	
-		// Check initial balance
-		try {
-			const balance = await myContract.methods.getBalance().call()
-			console.log(
-				'Contract balance:',
-				web3.utils.fromWei(balance, 'ether'),
-			'ETH'
-		)
-	} catch (error) {
-		console.error('Error getting contract balance:', error)
-	}
+	const accounts = await web3.eth.getAccounts()
+	const user = accounts[0]
+
+	// Check initial balance
+	const balance = await myContract.methods.getBalance().call()
+	console.log('Contract balance:', balance)
 
 	// Send Ether to the contract
-	try {
-		const tx = await web3.eth.sendTransaction({
-			from: user,
-			to: deployedAddress,
-			value: web3.utils.toWei('0.1', 'ether'),
-			gas: 2000000, // Set appropriate gas limit
-		})
-		console.log(
-			'Sent 0.1 Ether to the contract. Transaction Hash:',
-			tx.transactionHash
-		)
-	} catch (error) {
-		console.error('Error sending Ether to contract:', error)
-	}
+	await web3.eth.sendTransaction({
+		from: user,
+		to: deployedAddress,
+		value: web3.utils.toWei('0.1', 'ether'),
+		gas: 5000000, // Set a higher gas limit if needed
+	})
+
+	console.log('Sent 0.1 Ether to the contract.')
 
 	// Check updated balance
-	try {
-		const updatedBalance = await myContract.methods.getBalance().call()
-		console.log(
-			'Updated contract balance:',
-			web3.utils.fromWei(updatedBalance, 'ether'),
-			'ETH'
-		)
-	} catch (error) {
-		console.error('Error getting updated contract balance:', error)
-	}
+	const updatedBalance = await myContract.methods.getBalance().call()
+	console.log('Updated contract balance:', updatedBalance)
 
-	// Update myNumber
-	try {
-		const tx = await myContract.methods.setMyNumber(100).send({ from: user })
-		console.log(
-			'Updated myNumber to 100. Transaction Hash:',
-			tx.transactionHash
-		)
-	} catch (error) {
-		console.error('Error updating myNumber:', error)
+	// Withdraw funds
+	await myContract.methods.withdraw().send({ from: user })
+	console.log('Funds withdrawn by owner.')
 	}
-
-	// Withdraw funds (only the owner can withdraw)
-	try {
-		const tx = await myContract.methods.withdraw().send({ from: user })
-		console.log(
-			'Funds withdrawn by owner. Transaction Hash:',
-			tx.transactionHash
-		)
-	} catch (error) {
-		console.error('Error withdrawing funds:', error)
-	}
-	}
-
+	
 	interact().catch(console.error)
 
 2. Run the interaction script:
