@@ -158,6 +158,26 @@ contract MyContract {
    ```
 ![Screenshot 2024-12-29 183716](https://github.com/user-attachments/assets/cf5b6c2c-e0da-49c9-9ae4-ce081bb74f70)
 
+
+The Hardhat development network needs to remain running in the terminal that was used to start it. Open a new terminal instance in the project directory to execute the remaining commands in this tutorial.
+
+Next, create a new file called index.js in your project directory and add the following code to it:
+
+	const { Web3 } = require('web3');
+
+	const web3 = new Web3('http://127.0.0.1:8545/');
+
+	// Log the chain ID to the console
+	web3.eth
+		.getChainId()
+		.then(result => {
+			console.log('Chain ID: ' + result);
+		})
+		.catch(error => {
+			console.error(error);
+		});
+  ![Screenshot 2024-12-29 183926](https://github.com/user-attachments/assets/99ee4230-8909-4754-ac36-8742aa433eeb)
+
 ### Step 5: Deploy the Contract
 1. Create a `deploy.js` file:
    ```javascript
