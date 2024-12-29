@@ -387,7 +387,6 @@ Next, create a new file called index.js in your project directory and add the fo
    node interact.js
    ```
 ![Screenshot 2024-12-29 183235](https://github.com/user-attachments/assets/4aba8ec4-eaaa-4f02-aede-5734a3117d9a)
-![Screenshot 2024-12-29 183926](https://github.com/user-attachments/assets/b8b92c0e-f535-430c-9273-e5a99bbee71d)
 
 Step-by-Step Breakdown
 Setup Web3 Instance:
