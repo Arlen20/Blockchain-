@@ -86,57 +86,57 @@ contract MyContract {
    ```
 2. Create a file named `compile.js` and add the following code:
    ```javascript
-const solc = require('solc')
-const path = require('path')
-const fs = require('fs')
+	const solc = require('solc')
+	const path = require('path')
+	const fs = require('fs')
 
-const contractName = 'MyContract'
-const fileName = `${contractName}.sol`
-
-// Read the Solidity source code from the file system
-const contractPath = path.join(__dirname, fileName)
-const sourceCode = fs.readFileSync(contractPath, 'utf8')
-
-// solc compiler config
-const input = {
-	language: 'Solidity',
-	sources: {
-		[fileName]: {
-			content: sourceCode,
-		},
-	},
-	settings: {
-		outputSelection: {
-			'*': {
-				'*': ['*'],
+	const contractName = 'MyContract'
+	const fileName = `${contractName}.sol`
+	
+	// Read the Solidity source code from the file system
+	const contractPath = path.join(__dirname, fileName)
+	const sourceCode = fs.readFileSync(contractPath, 'utf8')
+	
+		// solc compiler config
+		const input = {
+		language: 'Solidity',
+		sources: {
+			[fileName]: {
+				content: sourceCode,
 			},
 		},
-	},
-}
+		settings: {
+			outputSelection: {
+				'*': {
+					'*': ['*'],
+				},
+			},
+		},
+	}
 
-// Compile the Solidity code using solc
-const compiledCode = JSON.parse(solc.compile(JSON.stringify(input)))
-
-// Get the bytecode from the compiled contract
-const bytecode =
-	compiledCode.contracts[fileName][contractName].evm.bytecode.object
-
-// Write the bytecode to a new file
-const bytecodePath = path.join(__dirname, 'MyContractBytecode.bin')
-fs.writeFileSync(bytecodePath, bytecode)
-
-// Log the compiled contract code to the console
-console.log('Contract Bytecode:\n', bytecode)
-
-// Get the ABI from the compiled contract
-const abi = compiledCode.contracts[fileName][contractName].abi
-
-// Write the Contract ABI to a new file
-const abiPath = path.join(__dirname, 'MyContractAbi.json')
-fs.writeFileSync(abiPath, JSON.stringify(abi, null, '\t'))
-
-// Log the Contract ABI to the console
-console.log('Contract ABI:\n', abi)
+	// Compile the Solidity code using solc
+	const compiledCode = JSON.parse(solc.compile(JSON.stringify(input)))
+	
+	// Get the bytecode from the compiled contract
+	const bytecode =
+		compiledCode.contracts[fileName][contractName].evm.bytecode.object
+	
+	// Write the bytecode to a new file
+	const bytecodePath = path.join(__dirname, 'MyContractBytecode.bin')
+	fs.writeFileSync(bytecodePath, bytecode)
+	
+	// Log the compiled contract code to the console
+	console.log('Contract Bytecode:\n', bytecode)
+	
+	// Get the ABI from the compiled contract
+	const abi = compiledCode.contracts[fileName][contractName].abi
+	
+	// Write the Contract ABI to a new file
+	const abiPath = path.join(__dirname, 'MyContractAbi.json')
+	fs.writeFileSync(abiPath, JSON.stringify(abi, null, '\t'))
+	
+	// Log the Contract ABI to the console
+	console.log('Contract ABI:\n', abi)
 
 3. Compile the contract:
    ```bash
@@ -161,41 +161,41 @@ console.log('Contract ABI:\n', abi)
 ### Step 5: Deploy the Contract
 1. Create a `deploy.js` file:
    ```javascript
-   const { Web3 } = require('web3')
-const path = require('path')
-const fs = require('fs')
+	   const { Web3 } = require('web3')
+	const path = require('path')
+	const fs = require('fs')
+	
+	const web3 = new Web3('http://127.0.0.1:8545/')
+	
+	const bytecodePath = path.join(__dirname, 'MyContractBytecode.bin')
+	const bytecode = fs.readFileSync(bytecodePath, 'utf8')
+	
+		const abi = require('./MyContractAbi.json')
+		const myContract = new web3.eth.Contract(abi)
+		
+		async function deploy() {
+			const accounts = await web3.eth.getAccounts()
+			const deployer = accounts[0]
+			console.log('Deployer account:', deployer)
+		
+			const contract = myContract.deploy({
+			data: '0x' + bytecode,
+			arguments: [1],
+		})
+	
+		const gasEstimate = await contract.estimateGas({ from: deployer })
+		console.log('Estimated gas:', gasEstimate)
+	
+		const instance = await contract.send({
+			from: deployer,
+			gas: gasEstimate,
+		})
+	
+		console.log('Contract deployed at:', instance.options.address)
+		fs.writeFileSync('./MyContractAddress.txt', instance.options.address)
+	}
 
-const web3 = new Web3('http://127.0.0.1:8545/')
-
-const bytecodePath = path.join(__dirname, 'MyContractBytecode.bin')
-const bytecode = fs.readFileSync(bytecodePath, 'utf8')
-
-const abi = require('./MyContractAbi.json')
-const myContract = new web3.eth.Contract(abi)
-
-async function deploy() {
-	const accounts = await web3.eth.getAccounts()
-	const deployer = accounts[0]
-	console.log('Deployer account:', deployer)
-
-	const contract = myContract.deploy({
-		data: '0x' + bytecode,
-		arguments: [1],
-	})
-
-	const gasEstimate = await contract.estimateGas({ from: deployer })
-	console.log('Estimated gas:', gasEstimate)
-
-	const instance = await contract.send({
-		from: deployer,
-		gas: gasEstimate,
-	})
-
-	console.log('Contract deployed at:', instance.options.address)
-	fs.writeFileSync('./MyContractAddress.txt', instance.options.address)
-}
-
-deploy().catch(console.error)
+	deploy().catch(console.error)
 
 
       
@@ -213,27 +213,27 @@ deploy().catch(console.error)
 const web3 = new Web3(window.ethereum) // This works with MetaMask
 
 const deployedAddress = 'your_contract_address_here' // Replace with your contract address from Remix
-const abi = [
-	/* ABI from Remix (copy and paste) */
-]
-
-const myContract = new web3.eth.Contract(abi, deployedAddress)
-
-async function interact() {
-	// Request account access if needed (MetaMask)
-	await window.ethereum.request({ method: 'eth_requestAccounts' })
-
-	const accounts = await web3.eth.getAccounts()
-	const user = accounts[0]
-
-	console.log('Interacting with contract at address:', deployedAddress)
-
-	// Check initial balance
-	try {
-		const balance = await myContract.methods.getBalance().call()
-		console.log(
-			'Contract balance:',
-			web3.utils.fromWei(balance, 'ether'),
+	const abi = [
+		/* ABI from Remix (copy and paste) */
+	]
+	
+	const myContract = new web3.eth.Contract(abi, deployedAddress)
+	
+	async function interact() {
+		// Request account access if needed (MetaMask)
+		await window.ethereum.request({ method: 'eth_requestAccounts' })
+	
+		const accounts = await web3.eth.getAccounts()
+		const user = accounts[0]
+	
+		console.log('Interacting with contract at address:', deployedAddress)
+	
+		// Check initial balance
+		try {
+			const balance = await myContract.methods.getBalance().call()
+			console.log(
+				'Contract balance:',
+				web3.utils.fromWei(balance, 'ether'),
 			'ETH'
 		)
 	} catch (error) {
@@ -289,9 +289,9 @@ async function interact() {
 	} catch (error) {
 		console.error('Error withdrawing funds:', error)
 	}
-}
+	}
 
-interact().catch(console.error)
+	interact().catch(console.error)
 
 2. Run the interaction script:
    ```bash
