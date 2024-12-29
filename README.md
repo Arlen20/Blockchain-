@@ -2,6 +2,8 @@
 
 A step-by-step guide to writing, compiling, deploying, and interacting with a Solidity smart contract using Hardhat, Web3.js, and Node.js.
 
+Done by SE-2315: Baibossyn Arlen, Tlegenova Kamilya, Nuray Kabylkhanova.
+
 ## Title
 Smart Contract Deployment and Interaction Tutorial
 
