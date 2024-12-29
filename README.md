@@ -391,63 +391,55 @@ Next, create a new file called index.js in your project directory and add the fo
 Step-by-Step Breakdown
 Setup Web3 Instance:
 
-javascript
-Copy code
-const web3 = new Web3('http://127.0.0.1:8545/');
+
+	const web3 = new Web3('http://127.0.0.1:8545/');
 Connects to the blockchain network (Ganache in this case).
 Define Contract Address and ABI:
 
-javascript
-Copy code
-const deployedAddress = '0xYourContractAddressHere';
-const abi = [ /* ABI Array */ ];
+
+	const deployedAddress = '0xYourContractAddressHere';
+	const abi = [ /* ABI Array */ ];
 Use the address of the deployed contract and its ABI (Application Binary Interface) generated during compilation.
 Initialize Contract Instance:
 
-javascript
-Copy code
-const myContract = new web3.eth.Contract(abi, deployedAddress);
+	const myContract = new web3.eth.Contract(abi, deployedAddress);
 This creates an instance of the contract, allowing you to call its functions.
 Get Accounts:
 
-javascript
-Copy code
-const accounts = await web3.eth.getAccounts();
-const user = accounts[0];
+
+	const accounts = await web3.eth.getAccounts();
+	const user = accounts[0];
 Fetches accounts from the connected blockchain and selects the first account for interaction.
 Get Contract Balance:
 
-javascript
-Copy code
-const balance = await myContract.methods.getBalance().call();
-console.log('Contract balance:', web3.utils.fromWei(balance, 'ether'), 'ETH');
+
+	const balance = await myContract.methods.getBalance().call();
+	console.log('Contract balance:', web3.utils.fromWei(balance, 'ether'), 'ETH');
 Calls the getBalance function of the contract to check the current Ether balance.
 Send Ether:
 
-javascript
-Copy code
-const sendTx = await web3.eth.sendTransaction({
-  from: user,
-  to: deployedAddress,
-  value: web3.utils.toWei('0.1', 'ether'),
-  gas: 2000000,
-});
-console.log('Transaction Hash (Send):', sendTx.transactionHash);
-Sends 0.1 Ether to the contract.
-Update Contract State:
 
-javascript
-Copy code
-const updateTx = await myContract.methods.setMyNumber(42).send({ from: user });
-console.log('Transaction Hash (Update):', updateTx.transactionHash);
+	const sendTx = await web3.eth.sendTransaction({
+	  from: user,
+	  to: deployedAddress,
+	  value: web3.utils.toWei('0.1', 'ether'),
+	  gas: 2000000,
+	});
+	console.log('Transaction Hash (Send):', sendTx.transactionHash);
+	Sends 0.1 Ether to the contract.
+	Update Contract State:
+
+
+	   const updateTx = await myContract.methods.setMyNumber(42).send({ from: user });
+	   console.log('Transaction Hash (Update):', updateTx.transactionHash);
 Calls the setMyNumber function to update the state variable myNumber to 42.
 Withdraw Ether (Owner Only):
 
-javascript
-Copy code
-const withdrawTx = await myContract.methods.withdraw().send({ from: user });
-console.log('Transaction Hash (Withdraw):', withdrawTx.transactionHash);
+
+	const withdrawTx = await myContract.methods.withdraw().send({ from: user });
+	console.log('Transaction Hash (Withdraw):', withdrawTx.transactionHash);
 Calls the withdraw function, allowing the owner to transfer all Ether in the contract back to their account.
+
 Prerequisites for Execution
 The contract must already be deployed, and its address must be known.
 Replace the placeholder 0xYourContractAddressHere with the actual contract address.
